@@ -2,7 +2,7 @@ const searchInput = document.querySelector('.searchInput');
 
 let inputCity = searchInput.value;
 
-let CITY_NAME = "Сходня";
+let CITY_NAME = "Moscow";
 const API_KEY = "3b3480ca7a37628268b94953090c4376";
 async function getLocation() {
     const weatherDiv = document.querySelector('.weather');
