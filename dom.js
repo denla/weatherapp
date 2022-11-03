@@ -1,13 +1,106 @@
+//Обращение к HTML
 const searchInput = document.querySelector('.searchInput');
+const searchResults = document.querySelector('.searchResults');
+const activeSearch = document.querySelector('.activeSearch');
+const cardsDiv = document.querySelector('.cards');
 
+
+//Получение координат текущей геолокации через браузер
+/*function success(pos) {
+    var crd = pos.coords;
+    console.log('Ваше текущее местоположение:');
+    console.log(`Широта: ${crd.latitude}`);
+    console.log(`Долгота: ${crd.longitude}`);
+    console.log(`Плюс-минус ${crd.accuracy} метров.`);
+};
+function error(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+};
+navigator.geolocation.getCurrentPosition(success, error);*/
+
+//Дефолтный город
+let CITY_NAME = "Москва";
+
+
+
+//ПОИСК
+const state = {
+    newCity: {
+        name: '',
+    },
+}
 let inputCity = searchInput.value;
 
-let CITY_NAME = "Moscow";
+//Парсим поисковые подсказки под полем поиска
+let cities_array = ["Москва", "Санкт-Петербург", "Химки", "Сочи", "Нижний Новгород", "Екатеринбург", "Владивосток", "Сидней", "Тула", "Нью-Йорк", "Иркутск", "Казань", "Лондон", "Париж"]; //
+let cities_sorted = cities_array.sort();
+function searchCities () {
+    for(i=0; i < cities_sorted.length; i++) {
+        let cityItem = `<div class="cityItem">${cities_sorted[i]}</div>`
+        searchResults.insertAdjacentHTML('beforeend', cityItem);
+    }
+}
+searchCities();
+
+//Отображаем поисковые подсказки под полем поиска при focus
+searchInput.addEventListener('focus', () => {
+    searchResults.classList.add("activeSearch");
+})
+
+//
+searchInput.addEventListener('input', e => {
+    state.newCity.name = e.target.value;
+    console.log(state.newCity.name);
+    let citiesArrNew = cities_array.filter(cityItem => cityItem.toLowerCase().indexOf(state.newCity.name.toLowerCase()) > -1).sort();
+    searchResults.innerHTML = '';
+    console.log(citiesArrNew);
+    if(citiesArrNew.length != 0) {
+        for(i=0; i < citiesArrNew.length; i++) {
+            let cityItem = `<div class="cityItem">${citiesArrNew[i]}</div>`
+            searchResults.insertAdjacentHTML('beforeend', cityItem);
+        }
+        makeClickedSearchItems();
+    } else {
+        const notFound = '<p class="secondaryText">Такого города нет в нашей базе данных</p>'
+        searchResults.insertAdjacentHTML('beforeend', notFound);
+    }
+});
+
+
+/*searchInput.addEventListener('blur', () => {
+    searchResults.classList.remove("activeSearch");
+})*/
+
+//Меняем CITY при нажатии на Enter в input
+searchInput.addEventListener('keyup', e => {
+    if(e.keyCode == 13) {
+        CITY_NAME = e.target.value; 
+        cardsDiv.innerHTML = '';
+        getLocation();
+        searchResults.classList.remove("activeSearch");
+    }
+});
+//Меняем CITY при клике на поисковую подсказку
+function makeClickedSearchItems() {
+    const searchItems = document.querySelectorAll(".cityItem");
+    searchItems.forEach(item => item.addEventListener('click', e => {
+        e.target.value = item.textContent; 
+        CITY_NAME = e.target.value;
+        searchInput.value = e.target.value;
+        searchResults.classList.remove("activeSearch");
+        cardsDiv.innerHTML = '';
+        getLocation();
+    }));
+}
+makeClickedSearchItems();
+
+
+
 const API_KEY = "3b3480ca7a37628268b94953090c4376";
 async function getLocation() {
     const weatherDiv = document.querySelector('.weather');
-    
-    let locationURL = `https://api.openweathermap.org/geo/1.0/direct?q=${CITY_NAME}&limit=5&appid=${API_KEY}`;
+    console.log('оу это идет в апи' + CITY_NAME);
+    let locationURL = `http://api.openweathermap.org/geo/1.0/direct?q=${CITY_NAME}&limit=5&appid=${API_KEY}`;
     let locationResponse = await fetch(locationURL);
     let locationJSON = await locationResponse.json();
     console.log(locationJSON[0]);
@@ -86,8 +179,6 @@ async function getLocation() {
     let mapsURL = `https://www.google.com/maps/place/${city}/@${locationJSON[0].lat},${locationJSON[0].lon},12z`;
     toMaps.href = mapsURL;
 
-
-    const cardsDiv = document.querySelector('.cards');
     const cardDiv_wind = `<div class="card square"><div class="title">Ветер</div><h2>${wind} м/c</h2></div>`
     cardsDiv.insertAdjacentHTML('afterbegin', cardDiv_wind);
 
@@ -97,4 +188,55 @@ async function getLocation() {
 
 }
 
-getLocation();
+
+
+//getLocation();
+
+
+
+
+/*function logPerson(name, age) {
+    console.log(`Person: ${name}, ${age}`);
+}*/
+//const person1 = logPerson('Den', 16);
+//const person2 = {name: "Дениск", age: 13};
+
+//logPerson('Den', 16);
+/*function bind(context, fn) {
+    return function
+};
+
+bind(person1, logPerson)*/
+/*
+class Bloger {
+    constructor(name, channel) {
+        this.name = name;
+        this.channel = channel;
+    }
+    getChannel() {
+        let result = `Автор канала: ${this.name}, канал: ${this.channel}`;
+        console.log(result);
+    }
+}
+
+const slivki = new Bloger('Сливки', 'Хомяк и Куки');
+*/
+
+//https://oauth.vk.com/authorize?client_id=51451852&display=page&scope=friends&response_type=token&v=5.52
+
+//https://oauth.vk.com/blank.html#access_token=vk1.a.1MPqOKUHjUMlfE_e043HAB_lsZKnpoql0FXUjYhBpp2wyx_4xByv889Jfg9rvbV8UoBd3ZinddWhMxlOnY8AuzrjIaxlTaHnM_rfc58Whlnj1G1Qanod2RYGM2olUhk73rvfVZU08JoEB0YYll6SV9IP4aGf-QyaIykd4Ijh3yNEwO-3zYMrGS6lVKuzthSn&expires_in=86400&user_id=200256792
+/*
+async function getUser() {
+    
+    const url_2 = 'https://jsonplaceholder.typicode.com/posts/1';
+    let getResponse = await fetch(url_2);
+    let userJSON = await getResponse.json();
+    console.log(userJSON);
+
+    //https://jsonplaceholder.typicode.com/
+}
+
+getUser();*/
+
+
+getLocation(CITY_NAME);
