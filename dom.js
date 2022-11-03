@@ -4,20 +4,6 @@ const searchResults = document.querySelector('.searchResults');
 const activeSearch = document.querySelector('.activeSearch');
 const cardsDiv = document.querySelector('.cards');
 
-
-//Получение координат текущей геолокации через браузер
-/*function success(pos) {
-    var crd = pos.coords;
-    console.log('Ваше текущее местоположение:');
-    console.log(`Широта: ${crd.latitude}`);
-    console.log(`Долгота: ${crd.longitude}`);
-    console.log(`Плюс-минус ${crd.accuracy} метров.`);
-};
-function error(err) {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-};
-navigator.geolocation.getCurrentPosition(success, error);*/
-
 //Дефолтный город
 let CITY_NAME = "Москва";
 
@@ -191,52 +177,6 @@ async function getLocation() {
 
 
 //getLocation();
-
-
-
-
-/*function logPerson(name, age) {
-    console.log(`Person: ${name}, ${age}`);
-}*/
-//const person1 = logPerson('Den', 16);
-//const person2 = {name: "Дениск", age: 13};
-
-//logPerson('Den', 16);
-/*function bind(context, fn) {
-    return function
-};
-
-bind(person1, logPerson)*/
-/*
-class Bloger {
-    constructor(name, channel) {
-        this.name = name;
-        this.channel = channel;
-    }
-    getChannel() {
-        let result = `Автор канала: ${this.name}, канал: ${this.channel}`;
-        console.log(result);
-    }
-}
-
-const slivki = new Bloger('Сливки', 'Хомяк и Куки');
-*/
-
-//https://oauth.vk.com/authorize?client_id=51451852&display=page&scope=friends&response_type=token&v=5.52
-
-//https://oauth.vk.com/blank.html#access_token=vk1.a.1MPqOKUHjUMlfE_e043HAB_lsZKnpoql0FXUjYhBpp2wyx_4xByv889Jfg9rvbV8UoBd3ZinddWhMxlOnY8AuzrjIaxlTaHnM_rfc58Whlnj1G1Qanod2RYGM2olUhk73rvfVZU08JoEB0YYll6SV9IP4aGf-QyaIykd4Ijh3yNEwO-3zYMrGS6lVKuzthSn&expires_in=86400&user_id=200256792
-/*
-async function getUser() {
-    
-    const url_2 = 'https://jsonplaceholder.typicode.com/posts/1';
-    let getResponse = await fetch(url_2);
-    let userJSON = await getResponse.json();
-    console.log(userJSON);
-
-    //https://jsonplaceholder.typicode.com/
-}
-
-getUser();*/
 
 
 getLocation(CITY_NAME);
